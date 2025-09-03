@@ -77,24 +77,3 @@ def fib_TopDown(n):
     print(dumps(appendChilds([n], delta), indent=2))
 
 fib_TopDown(5)
-
-def fibonacci_demo(n):
-    def delta(node, lst):
-        # Rekursiv nur, wenn > 1
-        if node['value'] > 1:
-            return [node['value'] - 1, node['value'] - 2]
-        else:
-            return []
-
-    def childsHandler(childs, node):
-        # Basisfall: keine Kinder → Ergebnis ist der Wert selbst
-        if not childs:
-            node['result'] = node['value']
-        else:
-            # Sonst Ergebnis = Summe der Kind-Ergebnisse
-            node['result'] = sum(child['result'] for child in childs)
-
-    tree = appendChilds([n], delta, childsHandler)
-    return tree
-
-#print(dumps(fibonacci_demo(5), indent=2))
