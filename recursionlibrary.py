@@ -1,4 +1,4 @@
-def appendChilds(lst, delta, childsHandler=(lambda childs, node: None)):
+def appendChilds(lst, delta, childsHandler=(lambda childs, node: None), combineCallback=(lambda childs, node: None)):
     def factorNode(value, currentListIndex, lstSize, layer, childs, parent):
         return {'value': value, 'currentListIndex': currentListIndex, 'listSize': lstSize, 'layer': layer, 'childs': childs, 'parent': parent}
 
@@ -15,7 +15,12 @@ def appendChilds(lst, delta, childsHandler=(lambda childs, node: None)):
             deltaed = delta(node, lst)
             if deltaed != []:
                 relationLessNode = factorNode(e, i, lstSize, layer, [], None)
-                node['childs'].extend(_appendChilds(deltaed, delta, layer=nextLayer, parent=relationLessNode))
+
+                childNodes = _appendChilds(deltaed, delta, layer=nextLayer, parent=relationLessNode)
+                node['childs'].extend(childNodes)
+                # für Bottom-Up-Rekursion
+                node['result'] = combineCallback(childNodes, node)
+
                 result.append(node)
                 childsHandler(node['childs'], node) # childs-Input (u.a. für Sibling-Management des nächsten Layers) holen und Output in node eintragen
 
