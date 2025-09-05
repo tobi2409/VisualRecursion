@@ -28,7 +28,7 @@ def appendChilds(lst, delta, childsHandler=(lambda childs, node: None), combineC
                 childNodes = _appendChilds(deltaed, delta, layer=nextLayer, parent=relationLessNode)
                 node['childs'].extend(childNodes)
                 # für Bottom-Up-Rekursion
-                node['result'] = combineCallback(childNodes, node)
+                node['value'] = combineCallback(childNodes, node)
 
                 result.append(node)
                 childsHandler(node['childs'], node) # childs-Input (u.a. für Sibling-Management des nächsten Layers) holen und Output in node eintragen
@@ -89,7 +89,7 @@ def fak_BottomUp(n):
         return [node['value'] - 1] if node['layer'] <= n else []
 
     def combineCallback(childNodes, node):
-	    return node['value'] * childNodes[0]['result'] if len(childNodes) != 0 else 1
+	    return node['value'] * childNodes[0]['value'] if len(childNodes) != 0 else 1
 
     print(dumps(appendChilds([n], delta, combineCallback=combineCallback), indent=2))
 
