@@ -75,10 +75,21 @@ def fak_TopDown(n):
 
 #fak_TopDown(5)
 
+def fak_BottomUp(n):
+    def delta(node, lst):
+        return [node['value'] - 1] if node['layer'] <= n else []
+
+    def combineCallback(childNodes, node):
+	    return node['value'] * childNodes[0]['result'] if len(childNodes) != 0 else 1
+
+    print(dumps(appendChilds([n], delta, combineCallback=combineCallback), indent=2))
+
+fak_BottomUp(5)
+
 def fib_TopDown(n):
     def delta(node, lst):
         return [node['value'] + node['value'] - 1, node['value'] - 1 + node['value'] - 2] if node['layer'] <= n else []
 
     print(dumps(appendChilds([n], delta), indent=2))
 
-fib_TopDown(5)
+#fib_TopDown(5)
