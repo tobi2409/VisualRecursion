@@ -1,3 +1,12 @@
+'''
+Ziel ist es, einen WYSIWYG-Editor zu entwickeln
+darin kann eine Rekursion in Form einer Baumstruktur modelliert werden
+damit die Visualisierung gut verständlich ist, wird dort mit Beispiel-Nodes gearbeitet
+diese Beispiel-Nodes haben aber keine Auswirkung auf den Algorithmus, sondern dienen lediglich der Visualisierung
+wichtig ist, dass die deltas angegeben werden,
+wobei man im Laufe der Entwicklung auch eine Mustererkennung entwickeln kann für die Übertragung von Beispiel-Nodes auf delta
+'''
+
 def appendChilds(lst, delta, childsHandler=(lambda childs, node: None), combineCallback=(lambda childs, node: None)):
     def factorNode(value, currentListIndex, lstSize, layer, childs, parent):
         return {'value': value, 'currentListIndex': currentListIndex, 'listSize': lstSize, 'layer': layer, 'childs': childs, 'parent': parent}
