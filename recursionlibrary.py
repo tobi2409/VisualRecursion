@@ -7,7 +7,7 @@ wichtig ist, dass die deltas angegeben werden,
 wobei man im Laufe der Entwicklung auch eine Mustererkennung entwickeln kann für die Übertragung von Beispiel-Nodes auf delta
 '''
 
-def appendChilds(lst, delta, childsHandler=(lambda childs, node: None), combineCallback=(lambda childs, node: None)):
+def appendChilds(lst, delta, childsHandler=(lambda childs, node: None), bufferCallback=(lambda node: None), combineCallback=(lambda childs, node: None)):
     def factorNode(value, currentListIndex, lstSize, layer, childs, parent):
         return {'value': value, 'currentListIndex': currentListIndex, 'listSize': lstSize, 'layer': layer, 'childs': childs, 'parent': parent}
 
@@ -21,14 +21,16 @@ def appendChilds(lst, delta, childsHandler=(lambda childs, node: None), combineC
         for i, e in enumerate(lst):
             node = factorNode(e, i, lstSize, layer, [], parent)
 
+            node['value'] = bufferCallback(node) # Buffer-Informationen beim Top-Down
+
             deltaed = delta(node, lst)
             if deltaed != []:
-                relationLessNode = factorNode(e, i, lstSize, layer, [], None)
+                #relationLessNode = factorNode(e, i, lstSize, layer, [], None)
 
-                childNodes = _appendChilds(deltaed, delta, layer=nextLayer, parent=relationLessNode)
+                childNodes = _appendChilds(deltaed, delta, layer=nextLayer, parent=id(node))
                 node['childs'].extend(childNodes)
-                # für Bottom-Up-Rekursion
-                node['value'] = combineCallback(childNodes, node)
+
+                node['value'] = combineCallback(childNodes, node) # für Bottom-Up-Rekursion
 
                 result.append(node)
                 childsHandler(node['childs'], node) # childs-Input (u.a. für Sibling-Management des nächsten Layers) holen und Output in node eintragen
@@ -39,66 +41,70 @@ def appendChilds(lst, delta, childsHandler=(lambda childs, node: None), combineC
     root['childs'].extend(_appendChilds(lst, delta))
     return root
 
+def getObject(id):
+    if id == None:
+        return None
+
+    import ctypes
+    return ctypes.cast(id, ctypes.py_object).value
+
 from json import dumps
 
-def demo1():
+def fak(n):
     def delta(node, lst):
-        return lst if node['layer'] <= 2 else []
+        return [node['value'] - 1] if node['value'] >= 1 else []
 
-    print(dumps(appendChilds([8,6,3,7], delta), indent=2))
-
-#demo1()
-
-def demo2():
-    def delta(node, lst):
-        return lst if node['layer'] <= 2 and (node['parent'] is None or node['value'] != node['parent']['value']) else []
-
-    #print(dumps(appendChilds([8,6,3], filter), indent=2))
-    appendChilds([8,6,3], delta)
-
-#demo2()
-
-def demo3():
-    def delta(node, lst):
-        return lst if node['layer'] <= 2 and (node['parent'] is None or node['value'] != node['parent']['value']) else []
-
-    def childsHandler(childs, node):
-        if node['layer'] != 1:
-            return
-        
-        print('--------')
-
-        for c in childs:
-            print(f'CHILD-HANDLER for child - {c['value']} at layer {c['layer']}')
-
-    #print(dumps(appendChilds([8,6,3], filter), indent=2))
-    appendChilds([8,6,3], delta, childsHandler)
-
-#demo3() 
-
-def fak_TopDown(n):
-    def delta(node, lst):
-        return [node['value'] * (n - node['layer'])] if node['layer'] <= n else []
-
-    print(dumps(appendChilds([n], delta), indent=2))
-
-#fak_TopDown(5)
-
-def fak_BottomUp(n):
-    def delta(node, lst):
-        return [node['value'] - 1] if node['layer'] <= n else []
+    def bufferCallback(node):
+        return node['value']
 
     def combineCallback(childNodes, node):
 	    return node['value'] * childNodes[0]['value'] if len(childNodes) != 0 else 1
 
+    tree = appendChilds([n], delta, bufferCallback=bufferCallback, combineCallback=combineCallback)
+    print(dumps(tree, indent=2))
+
+#fak(5)
+
+def sum(n):
+    def delta(node, lst):
+        return [node['value'] - 1] if node['value'] >= 1 else []
+
+    def combineCallback(childNodes, node):
+        return node['value'] + childNodes[0]['value'] if len(childNodes) != 0 else node['value']
+
     print(dumps(appendChilds([n], delta, combineCallback=combineCallback), indent=2))
 
-fak_BottomUp(5)
+#sum(5)
 
-def fib_TopDown(n):
+def fib(n):
     def delta(node, lst):
-        return [node['value'] + node['value'] - 1, node['value'] - 1 + node['value'] - 2] if node['layer'] <= n else []
+        return [node['value'] - 1, node['value'] - 2] if node['value'] - 1 >= 0 else []
 
-    print(dumps(appendChilds([n], delta), indent=2))
+    def bufferCallback(node):
+        return node['value']
 
-#fib_TopDown(5)
+    def combineCallback(childNodes, node):
+        return childNodes[0]['value'] + childNodes[1]['value'] if len(childNodes) == 2 else 1
+
+    print(dumps(appendChilds([n], delta, bufferCallback=bufferCallback, combineCallback=combineCallback), indent=2))
+
+#fib(7)
+
+"""
+Angenommen, ein Kind kann eine Treppe mit s Stufen erklimmen, indem es entweder 1, 2, ..., k
+Stufen in einem einzigen Schritt nimmt. Berechnen Sie alle unterschiedlichen Schrittfolgen, mit
+denen das Kind genau die s Stufen der Treppe erklimmt.
+"""
+def steps(s):
+    def delta(node, lst):
+        return [i for i in range(1, s + 1)] if node['value'] < s + 1 else []
+
+    def bufferCallback(node):
+        return node['value'] + (getObject(node['parent'])['value'] if node['parent'] != None else 0)
+
+    def combineCallback(childNodes, node):
+        return node['value']
+        
+    print(dumps(appendChilds([i for i in range(1, s + 1)], delta, bufferCallback=bufferCallback, combineCallback=combineCallback), indent=2))
+
+steps(5)
