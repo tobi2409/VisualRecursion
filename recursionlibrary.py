@@ -31,7 +31,7 @@ def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combin
 
             node['value'] = combineCallback(childNodes, node) # für Bottom-Up-Rekursion
 
-            if expandOnEmptyDelta and deltaed == [] or deltaed != []:
+            if deltaed != [] or expandOnEmptyDelta: # Node aufnehmen, wenn Kinder existieren ODER wir auch Blätter erzwingen wollen
                 result.append(node)
                 
             childsHandler(node['childs'], node) # childs-Input (u.a. für Sibling-Management des nächsten Layers) holen und Output in node eintragen
