@@ -3,7 +3,7 @@ from recursionlibrary import appendChilds, getObject
 from json import dumps
 
 def fak(n):
-    def delta(node, lst):
+    def delta(node, lst, originalLst):
         return [node['value'] - 1] if node['value'] >= 1 else []
 
     def combineCallback(childNodes, node):
@@ -14,7 +14,7 @@ def fak(n):
 #fak(5)
 
 def sum(n):
-    def delta(node, lst):
+    def delta(node, lst, originalLst):
         return [node['value'] - 1] if node['value'] >= 1 else []
 
     def combineCallback(childNodes, node):
@@ -25,7 +25,7 @@ def sum(n):
 #sum(5)
 
 def fib(n):
-    def delta(node, lst):
+    def delta(node, lst, originalLst):
         return [node['value'] - 1, node['value'] - 2] if node['value'] - 1 >= 0 else []
 
     def combineCallback(childNodes, node):
@@ -43,7 +43,7 @@ denen das Kind genau die s Stufen der Treppe erklimmt.
 
 #TODO: Framework müsste Möglichkeit für Result-Liste anbieten
 def steps(s):
-    def delta(node, lst):
+    def delta(node, lst, originalLst):
         return [i for i in range(1, s + 1)] if node['value'] <= s else []
 
     def bufferCallback(node):
@@ -54,7 +54,7 @@ def steps(s):
 #steps(5)
 
 def fullExpansion():
-    def delta(node, lst):
+    def delta(node, lst, originalLst):
         return lst if node['layer'] <= 2 else []
 
     print(dumps(appendChilds([8,6,3,7], delta), indent=2))
@@ -62,11 +62,20 @@ def fullExpansion():
 #fullExpansion()
 
 def distinctExpansion():
-    def delta(node, lst):
+    def delta(node, lst, originalLst):
         return [e for e in lst if e != node['value']]
 
     print(dumps(appendChilds([8,6,3,7], delta, expandOnEmptyDelta=True), indent=2))
 
-distinctExpansion()
+#distinctExpansion()
 
-#TODO: extend list, binarysearch, mergesort
+#TODO
+def flatten(lst):
+    def delta(node, lst, originalLst):
+        return [originalLst[:node['currentListIndex'] + 1]] if node['layer'] <= 2 else []
+
+    print(dumps(appendChilds(lst, delta), indent=2))
+
+flatten([2, 5, 1, 7, [3, 8, [9, 0], 2], 6, 4])
+
+#TODO: extend list, flatten list, binarysearch, mergesort
