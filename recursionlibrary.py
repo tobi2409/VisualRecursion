@@ -95,6 +95,8 @@ Angenommen, ein Kind kann eine Treppe mit s Stufen erklimmen, indem es entweder 
 Stufen in einem einzigen Schritt nimmt. Berechnen Sie alle unterschiedlichen Schrittfolgen, mit
 denen das Kind genau die s Stufen der Treppe erklimmt.
 """
+
+#TODO: Framework müsste Möglichkeit für Result-Liste anbieten
 def steps(s):
     def delta(node, lst):
         return [i for i in range(1, s + 1)] if node['value'] < s + 1 else []
