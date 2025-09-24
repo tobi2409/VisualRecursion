@@ -20,21 +20,20 @@ def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combin
         for i, e in enumerate(lst):
             node = factorNode(e, i, lstSize, layer, [], parent)
 
+            # das Value kann sich nochmal entscheidend verändern bzgl. delta und Child-Erzeugung
             node['value'] = bufferCallback(node) # Buffer-Informationen beim Top-Down
 
             deltaed = delta(node, lst)
-            childNodes = []
 
-            if deltaed != []:
+            if deltaed != [] or expandOnEmptyDelta: # Node aufnehmen, wenn Kinder existieren ODER wir auch Blätter erzwingen wollen
                 childNodes = _appendChilds(deltaed, delta, layer=layer + 1, parent=id(node))
                 node['childs'].extend(childNodes)
 
-            node['value'] = combineCallback(childNodes, node) # für Bottom-Up-Rekursion
+                node['value'] = combineCallback(childNodes, node) # für Bottom-Up-Rekursion
 
-            if deltaed != [] or expandOnEmptyDelta: # Node aufnehmen, wenn Kinder existieren ODER wir auch Blätter erzwingen wollen
                 result.append(node)
                 
-            childsHandler(node['childs'], node) # childs-Input (u.a. für Sibling-Management des nächsten Layers) holen und Output in node eintragen
+                childsHandler(node['childs'], node) # childs-Input (u.a. für Sibling-Management des nächsten Layers) holen und Output in node eintragen
 
         return result
 
