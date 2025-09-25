@@ -38,7 +38,7 @@ def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combin
 
                 treeResult.append(node)
                 
-                childsHandler(node['childs'], node) # childs-Input (u.a. für Sibling-Management des nächsten Layers) holen und Output in node eintragen
+                childsHandler(node['childs'], node) # childs-Input (u.a. für Sibling-Management des nächsten Layers) holen und Output in node eintragen; sinnvoll auch für Divide-And-Conquer
 
                 if resultConditionCallback(childNodes, node):
                     resultNode = resultNodeCallback(node)

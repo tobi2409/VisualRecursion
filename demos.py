@@ -17,7 +17,7 @@ def fak(n):
 
     print(dumps(appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback), indent=2))
 
-fak(5)
+#fak(5)
 
 def sum(n):
     def delta(node, lst, originalLst):
@@ -107,6 +107,6 @@ def flatten(lst):
 
     print(dumps(appendChilds(lst, delta, resultNodeCallback=resultNodeCallback), indent=2))
 
-#flatten([2, 5, 1, 7, [3, 8, [9, 0], 2], 6, 4])
+flatten([2, 5, 1, 7, [3, 8, [9, [4, 1], 0], 2], 6, 4])
 
 #TODO: binarysearch, mergesort
