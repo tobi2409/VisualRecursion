@@ -15,6 +15,9 @@ def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combin
     def _appendChilds(_lst, delta, layer=1, parent=None, originalLst=lst):
         result = []
 
+        if type(_lst) != list:
+            return [_lst]
+
         _lstSize = len(_lst)
 
         for i, e in enumerate(_lst):

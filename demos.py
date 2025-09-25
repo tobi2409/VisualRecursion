@@ -72,7 +72,10 @@ def distinctExpansion():
 #TODO
 def flatten(lst):
     def delta(node, lst, originalLst):
-        return [originalLst[:node['currentListIndex'] + 1]] if node['layer'] <= 2 else []
+        if type(node['value']) == list:
+            return node['value']
+        elif type(node['value']) == int:
+            return node['value']
 
     print(dumps(appendChilds(lst, delta), indent=2))
 
