@@ -12,9 +12,12 @@ def fak(n):
     def resultConditionCallback(childNodes, node):
         return node['layer'] == 1
 
-    print(dumps(appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback), indent=2))
+    def resultNodeCallback(node):
+        return node['value']
 
-#fak(5)
+    print(dumps(appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback), indent=2))
+
+fak(5)
 
 def sum(n):
     def delta(node, lst, originalLst):
@@ -26,7 +29,10 @@ def sum(n):
     def resultConditionCallback(childNodes, node):
         return node['layer'] == 1
 
-    print(dumps(appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback), indent=2))
+    def resultNodeCallback(node):
+        return node['value']
+
+    print(dumps(appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback), indent=2))
 
 #sum(5)
 
@@ -40,7 +46,10 @@ def fib(n):
     def resultConditionCallback(childNodes, node):
         return node['layer'] == 1
 
-    print(dumps(appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback), indent=2))
+    def resultNodeCallback(node):
+        return node['value']
+
+    print(dumps(appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback), indent=2))
 
 #fib(7)
 
@@ -66,7 +75,10 @@ def fullExpansion():
     def delta(node, lst, originalLst):
         return lst if node['layer'] <= 2 else []
 
-    print(dumps(appendChilds([8,6,3,7], delta), indent=2))
+    def resultNodeCallback(node):
+        return None
+
+    print(dumps(appendChilds([8,6,3,7], delta, resultNodeCallback=resultNodeCallback), indent=2))
 
 #fullExpansion()
 
@@ -74,11 +86,13 @@ def distinctExpansion():
     def delta(node, lst, originalLst):
         return [e for e in lst if e != node['value']]
 
-    print(dumps(appendChilds([8,6,3,7], delta, expandOnEmptyDelta=True), indent=2))
+    def resultNodeCallback(node):
+        return None
+
+    print(dumps(appendChilds([8,6,3,7], delta, resultNodeCallback=resultNodeCallback, expandOnEmptyDelta=True), indent=2))
 
 #distinctExpansion()
 
-#TODO
 def flatten(lst):
     def delta(node, lst, originalLst):
         # klar kann man das auch in einem Einzeiler schreiben, aber es soll veranschaulicht werden, dass auch ein normales int als delta ausgegeben werden kann
@@ -88,8 +102,11 @@ def flatten(lst):
         elif type(node['value']) == int:
             return node['value']
 
-    print(dumps(appendChilds(lst, delta), indent=2))
+    def resultNodeCallback(node):
+        return node['value']
 
-flatten([2, 5, 1, 7, [3, 8, [9, 0], 2], 6, 4])
+    print(dumps(appendChilds(lst, delta, resultNodeCallback=resultNodeCallback), indent=2))
+
+#flatten([2, 5, 1, 7, [3, 8, [9, 0], 2], 6, 4])
 
 #TODO: extend list, flatten list, binarysearch, mergesort
