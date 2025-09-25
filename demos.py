@@ -107,6 +107,43 @@ def flatten(lst):
 
     print(dumps(appendChilds(lst, delta, resultNodeCallback=resultNodeCallback), indent=2))
 
-flatten([2, 5, 1, 7, [3, 8, [9, [4, 1], 0], 2], 6, 4])
+#flatten([2, 5, 1, 7, [3, 8, [9, [4, 1], 0], 2], 6, 4])
+
+def mergeSort(lst):
+    def delta(node, lst, originalLst):
+        if len(node['value']) <= 1:
+            return []
+
+        mid = len(node['value']) // 2
+        return [node['value'][:mid], node['value'][mid:]]
+
+    def combineCallback(childNodes, node):
+        if len(childNodes) == 0:
+            return node['value']
+
+        left, right = childNodes[0]['value'], childNodes[1]['value']
+        merged = []
+        i = j = 0
+        while i < len(left) and j < len(right):
+            if left[i] < right[j]:
+                merged.append(left[i])
+                i += 1
+            else:
+                merged.append(right[j])
+                j += 1
+        merged.extend(left[i:])
+        merged.extend(right[j:])
+        return merged
+
+    def resultConditionCallback(childs, node):
+        return node['layer'] == 1
+
+    def resultNodeCallback(node):
+        return node['value']
+
+    print(dumps(appendChilds([lst], delta,
+        combineCallback=combineCallback, resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback, expandOnEmptyDelta=True), indent=2))
+
+mergeSort([7, 3, 8, 4, 2, 1, 9, 5])
 
 #TODO: binarysearch, mergesort
