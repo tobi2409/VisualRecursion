@@ -52,6 +52,30 @@ def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combin
     root['childs'].extend(childs)
     return root, result
 
+def divideAndConquer(lst, mergeChildsCallback, resultNodeCallback=(lambda node: node)):
+
+    def delta(node, lst, originalLst):
+        if len(node['value']) <= 1:
+            return []
+
+        mid = len(node['value']) // 2
+        return [node['value'][:mid], node['value'][mid:]]
+
+    def combineCallback(node):
+        if len(node['childs']) == 0:
+            return node['value']
+
+        childs = node['childs']
+
+        return mergeChildsCallback(childs, node)
+
+    def resultConditionCallback(node):
+        return node['layer'] == 1
+
+    return appendChilds([lst], delta,
+        combineCallback=combineCallback,
+        resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback, expandOnEmptyDelta=True)
+
 def getObject(id):
     if id == None:
         return None

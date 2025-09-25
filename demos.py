@@ -1,4 +1,4 @@
-from recursionlibrary import appendChilds, getObject
+from recursionlibrary import appendChilds, divideAndConquer, getObject
 
 from json import dumps
 
@@ -109,7 +109,7 @@ def flatten(lst):
 
 #flatten([2, 5, 1, 7, [3, 8, [9, [4, 1], 0], 2], 6, 4])
 
-def mergeSort(lst):
+def mergeSort1(lst):
     def delta(node, lst, originalLst):
         if len(node['value']) <= 1:
             return []
@@ -145,6 +145,34 @@ def mergeSort(lst):
         combineCallback=combineCallback,
         resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback, expandOnEmptyDelta=True), indent=2))
 
-mergeSort([7, 3, 8, 4, 2, 1, 9, 5])
+#mergeSort1([7, 3, 8, 4, 2, 1, 9, 5])
+
+# Divide-And-Conquer-API ist eher ungünstig, da es ziemlich viele Klassifikationen von Divide-And-Conquer-Algorithmen gibt
+# besser ist vielleicht in appendChilds ein mergeChildsCallback zu integrieren
+# oder eben gleich eine neue Schicht aufbauen, welche zum WYSIWYG-Editor rüberleitet
+def mergeSort2(lst):
+    def mergeChildsCallback(childs, node):
+        merged = []
+
+        i = j = 0
+        while i < len(childs[0]['value']) and j < len(childs[1]['value']):
+            if childs[0]['value'][i] < childs[1]['value'][j]:
+                merged.append(childs[0]['value'][i])
+                i += 1
+            else:
+                merged.append(childs[1]['value'][j])
+                j += 1
+
+        merged.extend(childs[0]['value'][i:])
+        merged.extend(childs[1]['value'][j:])
+
+        return merged
+
+    def resultNodeCallback(node):
+        return node['value']
+
+    print(dumps(divideAndConquer(lst, mergeChildsCallback=mergeChildsCallback, resultNodeCallback=resultNodeCallback), indent=2))
+
+#mergeSort2([7, 3, 8, 4, 2, 1, 9, 5])
 
 #TODO: binarysearch
