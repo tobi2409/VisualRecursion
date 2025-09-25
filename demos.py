@@ -109,4 +109,4 @@ def flatten(lst):
 
 #flatten([2, 5, 1, 7, [3, 8, [9, 0], 2], 6, 4])
 
-#TODO: extend list, flatten list, binarysearch, mergesort
+#TODO: binarysearch, mergesort
