@@ -51,7 +51,7 @@ def steps(s):
         
     print(dumps(appendChilds([i for i in range(1, s + 1)], delta, bufferCallback=bufferCallback), indent=2))
 
-#steps(5)
+steps(5)
 
 def fullExpansion():
     def delta(node, lst, originalLst):
@@ -79,6 +79,6 @@ def flatten(lst):
 
     print(dumps(appendChilds(lst, delta), indent=2))
 
-flatten([2, 5, 1, 7, [3, 8, [9, 0], 2], 6, 4])
+#flatten([2, 5, 1, 7, [3, 8, [9, 0], 2], 6, 4])
 
 #TODO: extend list, flatten list, binarysearch, mergesort

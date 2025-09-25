@@ -13,10 +13,11 @@ def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combin
         return {'value': value, 'currentListIndex': currentListIndex, 'listSize': lstSize, 'layer': layer, 'childs': childs, 'parent': parent}
 
     def _appendChilds(_lst, delta, layer=1, parent=None, originalLst=lst):
+        treeResult = []
         result = []
 
         if type(_lst) != list:
-            return [_lst]
+            return [], []
 
         _lstSize = len(_lst)
 
@@ -29,20 +30,25 @@ def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combin
             deltaed = delta(node, _lst, originalLst)
 
             if deltaed != [] or expandOnEmptyDelta: # Node aufnehmen, wenn Kinder existieren ODER wir auch Blätter erzwingen wollen
-                childNodes = _appendChilds(deltaed, delta, layer=layer + 1, parent=id(node), originalLst=lst)
+                childNodes, nextResult = _appendChilds(deltaed, delta, layer=layer + 1, parent=id(node), originalLst=lst)
                 node['childs'].extend(childNodes)
 
                 node['value'] = combineCallback(childNodes, node) # für Bottom-Up-Rekursion
 
-                result.append(node)
+                treeResult.append(node)
                 
                 childsHandler(node['childs'], node) # childs-Input (u.a. für Sibling-Management des nächsten Layers) holen und Output in node eintragen
 
-        return result
+                if node['childs'] == []:
+                    result.append(node)
+                result.extend(nextResult)
+
+        return treeResult, result
 
     root = factorNode(None, -1, -1, 0, [], None)
-    root['childs'].extend(_appendChilds(lst, delta))
-    return root
+    childs, result = _appendChilds(lst, delta)
+    root['childs'].extend(childs)
+    return root, result
 
 def getObject(id):
     if id == None:
