@@ -6,10 +6,10 @@ def fak(n):
     def delta(node, lst, originalLst):
         return [node['value'] - 1] if node['value'] >= 1 else []
 
-    def combineCallback(childNodes, node):
-        return node['value'] * childNodes[0]['value'] if len(childNodes) != 0 else 1
+    def combineCallback(node):
+        return node['value'] * node['childs'][0]['value'] if len(node['childs']) != 0 else 1
 
-    def resultConditionCallback(childNodes, node):
+    def resultConditionCallback(node):
         return node['layer'] == 1
 
     def resultNodeCallback(node):
@@ -23,10 +23,10 @@ def sum(n):
     def delta(node, lst, originalLst):
         return [node['value'] - 1] if node['value'] >= 1 else []
 
-    def combineCallback(childNodes, node):
-        return node['value'] + childNodes[0]['value'] if len(childNodes) != 0 else node['value']
+    def combineCallback(node):
+        return node['value'] + node['childs'][0]['value'] if len(node['childs']) != 0 else node['value']
 
-    def resultConditionCallback(childNodes, node):
+    def resultConditionCallback(node):
         return node['layer'] == 1
 
     def resultNodeCallback(node):
@@ -40,10 +40,10 @@ def fib(n):
     def delta(node, lst, originalLst):
         return [node['value'] - 1, node['value'] - 2] if node['value'] - 1 >= 0 else []
 
-    def combineCallback(childNodes, node):
-        return childNodes[0]['value'] + childNodes[1]['value'] if len(childNodes) == 2 else 1
+    def combineCallback(node):
+        return node['childs'][0]['value'] + node['childs'][1]['value'] if len(node['childs']) == 2 else 1
 
-    def resultConditionCallback(childNodes, node):
+    def resultConditionCallback(node):
         return node['layer'] == 1
 
     def resultNodeCallback(node):
@@ -117,11 +117,11 @@ def mergeSort(lst):
         mid = len(node['value']) // 2
         return [node['value'][:mid], node['value'][mid:]]
 
-    def combineCallback(childNodes, node):
-        if len(childNodes) == 0:
+    def combineCallback(node):
+        if len(node['childs']) == 0:
             return node['value']
 
-        left, right = childNodes[0]['value'], childNodes[1]['value']
+        left, right = node['childs'][0]['value'], node['childs'][1]['value']
         merged = []
         i = j = 0
         while i < len(left) and j < len(right):
@@ -135,15 +135,16 @@ def mergeSort(lst):
         merged.extend(right[j:])
         return merged
 
-    def resultConditionCallback(childs, node):
+    def resultConditionCallback(node):
         return node['layer'] == 1
 
     def resultNodeCallback(node):
         return node['value']
 
     print(dumps(appendChilds([lst], delta,
-        combineCallback=combineCallback, resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback, expandOnEmptyDelta=True), indent=2))
+        combineCallback=combineCallback,
+        resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback, expandOnEmptyDelta=True), indent=2))
 
 mergeSort([7, 3, 8, 4, 2, 1, 9, 5])
 
-#TODO: binarysearch, mergesort
+#TODO: binarysearch

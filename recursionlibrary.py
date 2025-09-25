@@ -7,8 +7,8 @@ wichtig ist, dass die deltas angegeben werden,
 wobei man im Laufe der Entwicklung auch eine Mustererkennung entwickeln kann für die Übertragung von Beispiel-Nodes auf delta
 '''
 
-def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combineCallback=(lambda childs, node: node['value']), childsHandler=(lambda childs, node: None),
-        resultConditionCallback=(lambda childs, node: node['childs'] == []), resultNodeCallback=(lambda node: node), expandOnEmptyDelta = False):
+def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combineCallback=(lambda node: node['value']),
+        resultConditionCallback=(lambda node: node['childs'] == []), resultNodeCallback=(lambda node: node), expandOnEmptyDelta = False):
         
     def factorNode(value, currentListIndex, lstSize, layer, childs, parent):
         return {'value': value, 'currentListIndex': currentListIndex, 'listSize': lstSize, 'layer': layer, 'childs': childs, 'parent': parent}
@@ -34,13 +34,11 @@ def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combin
                 childNodes, nextResult = _appendChilds(deltaed, delta, layer=layer + 1, parent=id(node), originalLst=lst)
                 node['childs'].extend(childNodes)
 
-                node['value'] = combineCallback(childNodes, node) # für Bottom-Up-Rekursion
+                node['value'] = combineCallback(node) # für Bottom-Up-Rekursion
 
                 treeResult.append(node)
-                
-                childsHandler(node['childs'], node) # childs-Input (u.a. für Sibling-Management des nächsten Layers) holen und Output in node eintragen; sinnvoll auch für Divide-And-Conquer
 
-                if resultConditionCallback(childNodes, node):
+                if resultConditionCallback(node):
                     resultNode = resultNodeCallback(node)
                     if resultNode != None:
                         result.append(resultNodeCallback(node))
