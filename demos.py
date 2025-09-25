@@ -7,9 +7,12 @@ def fak(n):
         return [node['value'] - 1] if node['value'] >= 1 else []
 
     def combineCallback(childNodes, node):
-	    return node['value'] * childNodes[0]['value'] if len(childNodes) != 0 else 1
+        return node['value'] * childNodes[0]['value'] if len(childNodes) != 0 else 1
 
-    print(dumps(appendChilds([n], delta, combineCallback=combineCallback), indent=2))
+    def resultConditionCallback(childNodes, node):
+        return node['layer'] == 1
+
+    print(dumps(appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback), indent=2))
 
 #fak(5)
 
@@ -20,7 +23,10 @@ def sum(n):
     def combineCallback(childNodes, node):
         return node['value'] + childNodes[0]['value'] if len(childNodes) != 0 else node['value']
 
-    print(dumps(appendChilds([n], delta, combineCallback=combineCallback), indent=2))
+    def resultConditionCallback(childNodes, node):
+        return node['layer'] == 1
+
+    print(dumps(appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback), indent=2))
 
 #sum(5)
 
@@ -31,7 +37,10 @@ def fib(n):
     def combineCallback(childNodes, node):
         return childNodes[0]['value'] + childNodes[1]['value'] if len(childNodes) == 2 else 1
 
-    print(dumps(appendChilds([n], delta, combineCallback=combineCallback), indent=2))
+    def resultConditionCallback(childNodes, node):
+        return node['layer'] == 1
+
+    print(dumps(appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback), indent=2))
 
 #fib(7)
 
@@ -41,7 +50,7 @@ Stufen in einem einzigen Schritt nimmt. Berechnen Sie alle unterschiedlichen Sch
 denen das Kind genau die s Stufen der Treppe erklimmt.
 """
 
-#TODO: Framework müsste Möglichkeit für Result-Liste anbieten
+#TODO: Parents müssen noch dereferenziert werden
 def steps(s):
     def delta(node, lst, originalLst):
         return [i for i in range(1, s + 1)] if node['value'] <= s else []
@@ -51,7 +60,7 @@ def steps(s):
         
     print(dumps(appendChilds([i for i in range(1, s + 1)], delta, bufferCallback=bufferCallback), indent=2))
 
-steps(5)
+#steps(5)
 
 def fullExpansion():
     def delta(node, lst, originalLst):
@@ -72,6 +81,8 @@ def distinctExpansion():
 #TODO
 def flatten(lst):
     def delta(node, lst, originalLst):
+        # klar kann man das auch in einem Einzeiler schreiben, aber es soll veranschaulicht werden, dass auch ein normales int als delta ausgegeben werden kann
+        # -> in dem Fall findet einfach keine weitere Rekursion mehr statt und das int wird zum Blatt
         if type(node['value']) == list:
             return node['value']
         elif type(node['value']) == int:
@@ -79,6 +90,6 @@ def flatten(lst):
 
     print(dumps(appendChilds(lst, delta), indent=2))
 
-#flatten([2, 5, 1, 7, [3, 8, [9, 0], 2], 6, 4])
+flatten([2, 5, 1, 7, [3, 8, [9, 0], 2], 6, 4])
 
 #TODO: extend list, flatten list, binarysearch, mergesort

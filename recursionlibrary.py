@@ -8,7 +8,8 @@ wobei man im Laufe der Entwicklung auch eine Mustererkennung entwickeln kann fü
 '''
 
 def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combineCallback=(lambda childs, node: node['value']), childsHandler=(lambda childs, node: None),
-        expandOnEmptyDelta = False):
+        resultConditionCallback=(lambda childs, node: node['childs'] == []), expandOnEmptyDelta = False):
+        
     def factorNode(value, currentListIndex, lstSize, layer, childs, parent):
         return {'value': value, 'currentListIndex': currentListIndex, 'listSize': lstSize, 'layer': layer, 'childs': childs, 'parent': parent}
 
@@ -39,8 +40,9 @@ def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combin
                 
                 childsHandler(node['childs'], node) # childs-Input (u.a. für Sibling-Management des nächsten Layers) holen und Output in node eintragen
 
-                if node['childs'] == []:
+                if resultConditionCallback(childNodes, node):
                     result.append(node)
+
                 result.extend(nextResult)
 
         return treeResult, result
