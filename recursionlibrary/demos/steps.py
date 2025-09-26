@@ -20,9 +20,9 @@ def steps(s):
     def delta(node, lst, originalLst):
         return [i for i in range(1, s + 1)] if node['value'] <= s else []
 
-    def bufferCallback(node):
+    def assignCallback(node):
         return node['value'] + getObject(node['parent'])['value']
         
-    print(dumps(appendChilds([i for i in range(1, s + 1)], delta, bufferCallback=bufferCallback, rootValue=0), indent=2))
+    print(dumps(appendChilds([i for i in range(1, s + 1)], delta, assignCallback=assignCallback, rootValue=0), indent=2))
 
 steps(5)
