@@ -8,7 +8,8 @@ wobei man im Laufe der Entwicklung auch eine Mustererkennung entwickeln kann fü
 '''
 
 def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combineCallback=(lambda node: node['value']),
-        resultConditionCallback=(lambda node: node['childs'] == []), resultNodeCallback=(lambda node: node), expandOnEmptyDelta = False):
+        resultConditionCallback=(lambda node: node['childs'] == []), resultNodeCallback=(lambda node: node), expandOnEmptyDelta = False,
+        rootValue = None):
         
     def factorNode(value, currentListIndex, lstSize, layer, childs, parent):
         return {'value': value, 'currentListIndex': currentListIndex, 'listSize': lstSize, 'layer': layer, 'childs': childs, 'parent': parent}
@@ -47,13 +48,13 @@ def appendChilds(lst, delta, bufferCallback=(lambda node: node['value']), combin
 
         return treeResult, result
 
-    root = factorNode(None, -1, -1, 0, [], None)
-    childs, result = _appendChilds(lst, delta)
+    root = factorNode(rootValue, -1, -1, 0, [], -1)
+    childs, result = _appendChilds(lst, delta, parent=id(root))
     root['childs'].extend(childs)
     return root, result
 
 def getObject(id):
-    if id == None:
+    if id == -1:
         return None
 
     import ctypes
