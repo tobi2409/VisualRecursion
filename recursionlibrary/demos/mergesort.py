@@ -17,11 +17,11 @@ def mergeSort(lst):
         mid = len(node['value']) // 2
         return [node['value'][:mid], node['value'][mid:]]
 
-    def combineChildNodesCallback(node, childNodes):
-        if len(childNodes) == 0:
+    def combineCallback(node):
+        if len(node['childs']) == 0:
             return node['value']
 
-        left, right = childNodes[0]['value'], childNodes[1]['value']
+        left, right = node['childs'][0]['value'], node['childs'][1]['value']
         merged = []
         i = j = 0
         while i < len(left) and j < len(right):
@@ -42,7 +42,7 @@ def mergeSort(lst):
         return node['value']
 
     print(dumps(appendChilds([lst], delta,
-        combineChildNodesCallback=combineChildNodesCallback,
+        combineCallback=combineCallback,
         resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback, expandOnEmptyDelta=True), indent=2))
 
 mergeSort([7, 3, 8, 4, 2, 1, 9, 5])
