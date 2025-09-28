@@ -19,11 +19,15 @@ def dfssum(tree):
     def combineCallback(node):
         return node['value']['val']
 
+    def resultConditionCallback(node):
+        return True
+
     def resultNodeCallback(node):
-        return None
+        return node['value']
 
     print(dumps(appendChilds([tree], delta, assignCallback=assignCallback, combineCallback=combineCallback,
-        resultNodeCallback=resultNodeCallback, expandOnEmptyDelta=True, rootValue={'val': 0}, assignResultStoreIn='val'), indent=2))
+        resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback,
+        expandOnEmptyDelta=True, rootValue={'val': 0}, assignResultStoreIn='val'), indent=2))
 
 dfssum({
     'val': 1,
