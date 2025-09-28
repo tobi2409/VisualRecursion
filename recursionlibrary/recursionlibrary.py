@@ -9,10 +9,19 @@ wobei man im Laufe der Entwicklung auch eine Mustererkennung entwickeln kann fü
 
 def appendChilds(lst, delta, assignCallback=(lambda node: node['value']), combineCallback=(lambda node: node['value']),
         resultConditionCallback=(lambda node: node['childs'] == []), resultNodeCallback=(lambda node: node), expandOnEmptyDelta = False,
-        rootValue = None):
+        rootValue = None, assignResultStoreIn = '', combineResultStoreIn = ''):
         
     def factorNode(value, currentListIndex, lstSize, layer, childs, parent):
         return {'value': value, 'currentListIndex': currentListIndex, 'listSize': lstSize, 'layer': layer, 'childs': childs, 'parent': parent}
+
+    def setValue(node, storeIn, value):
+        if storeIn == '':
+            node['value'] = value
+        else:
+            if type(node['value']) != dict:
+                node['value'] = {}
+
+            node['value'][storeIn] = value
 
     def _appendChilds(_lst, delta, layer=1, parent=None, originalLst=lst):
         treeResult = []
@@ -27,7 +36,7 @@ def appendChilds(lst, delta, assignCallback=(lambda node: node['value']), combin
             node = factorNode(e, i, _lstSize, layer, [], parent)
 
             # das Value kann sich nochmal entscheidend verändern bzgl. delta und Child-Erzeugung
-            node['value'] = assignCallback(node) # Assign-Informationen beim Top-Down
+            setValue(node, assignResultStoreIn, assignCallback(node)) # Assign-Informationen beim Top-Down
 
             deltaed = delta(node, _lst, originalLst)
 
@@ -35,7 +44,7 @@ def appendChilds(lst, delta, assignCallback=(lambda node: node['value']), combin
                 childNodes, nextResult = _appendChilds(deltaed, delta, layer=layer + 1, parent=id(node), originalLst=lst)
                 node['childs'].extend(childNodes)
 
-                node['value'] = combineCallback(node) # für Bottom-Up-Rekursion
+                setValue(node, combineResultStoreIn, combineCallback(node)) # für Bottom-Up-Rekursion
 
                 treeResult.append(node)
 
