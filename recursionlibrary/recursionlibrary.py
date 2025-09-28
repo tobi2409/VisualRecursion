@@ -7,8 +7,8 @@ wichtig ist, dass die deltas angegeben werden,
 wobei man im Laufe der Entwicklung auch eine Mustererkennung entwickeln kann für die Übertragung von Beispiel-Nodes auf delta
 '''
 
-def appendChilds(lst, delta, assignCallback=(lambda node: node['value']), combineCallback=(lambda node: node['value']),
-        resultConditionCallback=(lambda node: node['childs'] == []), resultNodeCallback=(lambda node: node), expandOnEmptyDelta = False,
+def appendChilds(lst, delta, assignCallback = (lambda node: node['value']), combineCallback = (lambda node: node['value']),
+        resultConditionCallback = (lambda node: node['childs'] == []), resultNodeCallback = (lambda node: node), expandOnEmptyDelta = False,
         rootValue = None, assignResultStoreIn = '', combineResultStoreIn = ''):
         
     def factorNode(value, currentListIndex, lstSize, layer, childs, parent):
