@@ -5,6 +5,8 @@ damit die Visualisierung gut verständlich ist, wird dort mit Beispiel-Nodes gea
 diese Beispiel-Nodes haben aber keine Auswirkung auf den Algorithmus, sondern dienen lediglich der Visualisierung
 wichtig ist, dass die deltas angegeben werden,
 wobei man im Laufe der Entwicklung auch eine Mustererkennung entwickeln kann für die Übertragung von Beispiel-Nodes auf delta
+
+Dies ist nur ein Prototyp. Die Übersetzung vom WYSIWYG-Editor resultiert in nativem rekursiven Code ohne Verwendung von appendChilds.
 '''
 
 def appendChilds(lst, delta, assignCallback = (lambda node: node['value']), combineCallback = (lambda node: node['value']),
