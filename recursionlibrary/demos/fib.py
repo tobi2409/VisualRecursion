@@ -22,6 +22,12 @@ def fib(n):
     def resultNodeCallback(node):
         return node['value']
 
-    print(dumps(appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback), indent=2))
+    return appendChilds([n], delta, combineCallback=combineCallback, resultConditionCallback=resultConditionCallback, resultNodeCallback=resultNodeCallback)
 
-fib(7)
+import datetime
+t = datetime.datetime.now()
+
+print(fib(7)[1])
+
+t = datetime.datetime.now() - t
+print(t)

@@ -6,7 +6,13 @@ diese Beispiel-Nodes haben aber keine Auswirkung auf den Algorithmus, sondern di
 wichtig ist, dass die deltas angegeben werden,
 wobei man im Laufe der Entwicklung auch eine Mustererkennung entwickeln kann für die Übertragung von Beispiel-Nodes auf delta
 
-Dies ist nur ein Prototyp. Die Übersetzung vom WYSIWYG-Editor resultiert in nativem rekursiven Code ohne Verwendung von appendChilds.
+Die Schwäche von appendChilds ist die Performance.
+
+Dies soll in zwei Wegen gelöst werden.
+1.) mehrere Abstraktionsschichten von appendChilds (angefangen von einem ganz minimalen Template bis zu diesem komplexen Template)
+    inkl. Parametrisierungen, welche node-Attribute mitgeliefert werden sollen, ob im Node childs erstellt werden sollen etc.
+2.) (besonders für mathematische Funktionen wie fib, fak), bei denen die Liste sowie die Erstellung der delta-Liste nur eine visuelle Funktion hat,
+    soll ein Compiler die Listenstruktur in eine "native" Struktur umwandeln
 '''
 
 def appendChilds(lst, delta, assignCallback = (lambda node: node['value']), combineCallback = (lambda node: node['value']),

@@ -1,0 +1,16 @@
+Ziel ist es, einen WYSIWYG-Editor zu entwickeln.
+Darin kann eine Rekursion in Form einer Baumstruktur modelliert werden.
+Damit die Visualisierung gut verständlich ist, wird dort mit Beispiel-Nodes gearbeitet.
+Diese Beispiel-Nodes haben aber keine Auswirkung auf den Algorithmus, sondern dienen lediglich der Visualisierung.
+Wichtig ist, dass die deltas (also wie sich die Liste innerhalb jeden Rekursionsschritt verändert) angegeben werden,
+wobei man im Laufe der Entwicklung auch eine Mustererkennung entwickeln kann für die Übertragung von Beispiel-Nodes auf delta.
+
+Bisher findet man unter recursionlibrary/recursionlibrary.py das bisherige Template und einen demos-Ordner.
+
+Die Schwäche von appendChilds ist die Performance.
+
+Dies soll in zwei Wegen gelöst werden.
+1.) mehrere Abstraktionsschichten von appendChilds (angefangen von einem ganz minimalen Template bis zu diesem komplexen Template)
+    inkl. Parametrisierungen, welche node-Attribute mitgeliefert werden sollen, ob im Node childs erstellt werden sollen etc.
+2.) (besonders für mathematische Funktionen wie fib, fak), bei denen die Liste sowie die Erstellung der delta-Liste nur eine visuelle Funktion hat,
+    soll ein Compiler die Listenstruktur in eine "native" Struktur umwandeln
